@@ -1,34 +1,95 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+//import { RouteReuseStrategy } from 'angular/router';
 
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
-
-import { StatusBar } from '@ionic-native/status-bar';
+import { IonicModule } from 'ionic-angular';
+//import { IonicRouteStrategy } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+
+import {AppComponent} from "./app.component";
+import {HomePage} from "../pages/home/home";
+import {ListPage} from "../pages/list/list";
+import {Login} from "../pages/login/login";
+
+
+//import { AppRoutingModule } from './app-routing.module';
+import {HttpClientModule} from "@angular/common/http";
+import {IonicStorageModule, Storage} from "@ionic/storage";
+
+import {JwtClientService} from "../services/jwt-client.service";
+import {AuthService} from "../services/auth.service";
+
+import {JwtModule, JWT_OPTIONS, JwtHelperService} from "@auth0/angular-jwt";
+import {IonicApp} from "ionic-angular";
+
+
+export function tokenGetter() {
+    return localStorage.getItem('access_token');
+}
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-    ListPage
+  declarations: [AppComponent,
+      HomePage,
+      ListPage,
+      Login,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(AppComponent),
+    //AppRoutingModule,
+      HttpClientModule,
+      IonicStorageModule.forRoot({
+          driverOrder: ['localstorage']
+      }),
+      JwtModule.forRoot({
+          /*jwtOptionsProvider: {
+              provide: JWT_OPTIONS,
+              useFactory: jwtOptionsFactory,
+              deps: [AuthService]
+          },*/
+          config:{
+              tokenGetter: tokenGetter,
+              whitelistedDomains: ['localhost:8000'],
+          }
+      })
   ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    ListPage
-  ],
+    bootstrap: [IonicApp, AppComponent],
+    entryComponents: [
+        AppComponent,
+        HomePage,
+        ListPage,
+        Login,
+    ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+      JwtClientService,
+      JwtHelperService,
+      AuthService,
+   // { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    /*  {
+          provide: AuthHttp,
+          deps: [HttpClientModule, Storage],
+          useFactory(http, storage){
+              let authConfig = new AuthConfig({
+                  headerPrefix: 'Bearer',
+                  noJwtError: true,
+                  noClientCheck: true,
+                  tokenGetter: (() => storage.get(ENV.TOKEN_NAME))
+              });
+              return new AuthHttp(authConfig, http)
+          }
+      }*/
   ]
+
 })
 export class AppModule {}
+
+/*export function jwtOptionsFactory(AuthService) {
+    return {
+        tokenGetter: () => {
+            return AuthService.getToken();
+        },
+    }
+}*/
