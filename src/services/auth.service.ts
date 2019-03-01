@@ -23,6 +23,9 @@ export class AuthService {
                   this._user = payload.user;
               }
               resolve(this._user);
+          }, error => {
+              console.log(error);
+              resolve(null);
           });
       });
   }

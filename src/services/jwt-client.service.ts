@@ -18,23 +18,27 @@ export class JwtClientService {
         public storage:Storage,
         public jwtHelper: JwtHelperService) {
         this.getToken();
-        this.getPayload().then((payload)=>{
+        /*this.getPayload().then((payload)=>{
             console.log(payload);
-        })
+        })*/
     }
 
     getPayload(): Promise<Object> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (this._payload) {
                 resolve(this._payload);
             }
+            try {
                 this.getToken().then(token => {
                     if (token) {
-                       // this._payload = this.jwtHelper.decodeToken(token['token']);
+                        // this._payload = this.jwtHelper.decodeToken(token['token']);
                         this._payload = this.jwtHelper.decodeToken(token);
                     }
                     resolve(this._payload);
                 });
+            } catch (e) {
+                reject(e)
+            }
         });
     }
 

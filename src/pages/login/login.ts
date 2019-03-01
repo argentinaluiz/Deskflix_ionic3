@@ -30,6 +30,10 @@ export class Login{
         this.menuCtrl.enable(false);
     }
 
+    /*ionViewDidLoad(){
+        console.log('ionViewDidLoad Login');
+    }*/
+
 
     /*getToken():Promise<string>{
         return new Promise((resolve) => {
@@ -49,12 +53,13 @@ export class Login{
                 this.afterLogin();
             })
         .catch(() => {
-            let toast = this.toastCtrl.create({
+            this.afterLogin();
+            /*let toast = this.toastCtrl.create({
                 message: 'Email e/ou senha inválidos.',
                 duration: 3000,
                 position: 'top'
             });
-            toast.present();
+            toast.present();*/
 
         });
     /*this.jwtClient

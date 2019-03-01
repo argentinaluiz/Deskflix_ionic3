@@ -35,10 +35,16 @@ export function tokenGetter() {
       Login,
   ],
   imports: [
-    BrowserModule,
-    IonicModule.forRoot(AppComponent),
-    //AppRoutingModule,
       HttpClientModule,
+    BrowserModule,
+    IonicModule.forRoot(AppComponent, {}/*, {
+          links: [
+              {component: Login, name: 'LoginPage', segment: 'login'},
+              {component: HomePage, name: 'HomePage', segment: 'home'},
+          ]
+      }*/),
+    //AppRoutingModule,
+
       IonicStorageModule.forRoot({
           driverOrder: ['localstorage']
       }),
