@@ -49,11 +49,11 @@ export class Login{
 
     login() {
         this.auth.login(this.user)
-            .then(() => {
+            .subscribe(() => {
                 this.afterLogin();
-            })
-        .catch(() => {
-            this.afterLogin();
+            }, (error) => this.afterLogin())
+        //.catch(() => {
+            ;
             /*let toast = this.toastCtrl.create({
                 message: 'Email e/ou senha inválidos.',
                 duration: 3000,
@@ -61,7 +61,7 @@ export class Login{
             });
             toast.present();*/
 
-        });
+        //});
     /*this.jwtClient
         .accessToken({email: this.email, password:this.password})
         .then((token) =>{

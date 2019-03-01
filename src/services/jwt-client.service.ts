@@ -3,7 +3,8 @@ import {JwtCredentials} from "../models/jwt-credentials";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Storage} from "@ionic/storage";
 import {JwtHelperService} from "@auth0/angular-jwt";
-
+import {tap} from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 //const helper = new JwtHelperService();
 
 @Injectable()
@@ -54,18 +55,19 @@ export class JwtClientService {
         });
     }
 
-    accessToken(jwtCredentials: JwtCredentials): Promise<string>{
-        return this.authHttp.post('http://localhost:8000/api/access_token',jwtCredentials)
-            .toPromise()
-            .then( (response: Response) => {
-                let token = response.json();
+    accessToken(jwtCredentials: JwtCredentials): Observable<string>{
+        return this.authHttp.post<any>('http://localhost:8000/api/login',jwtCredentials)
+            .pipe(
+                tap(data => {
+                    let token = data.token;
                 //let token = response.json().token;
             /*.then( data => {
                 let token = data;*/
                 this._token = token;
+                console.log(token);
                 this.storage.set('token', this._token);
-                return token;
-            });
+                })
+            )
     }
 
     revokeToken():Promise<null>{
